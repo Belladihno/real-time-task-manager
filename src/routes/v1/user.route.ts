@@ -1,18 +1,18 @@
 import { Router } from "express";
-import { getUser } from "@/controllers/users/get.user";
+import { getProfile } from "@/controllers/users/get.profile";
 import protect from "@/middlewares/protect";
 import authorize from "@/middlewares/authorize";
-import { updateUser } from "@/controllers/users/update.user";
+import { updateProfile } from "@/controllers/users/update.profile";
 import { changePassword } from "@/controllers/users/change.password";
-import { getAllUsers } from "@/controllers/users/get.all.users";
-import { getUserById } from "@/controllers/users/get.user.byId";
+import { getUsers } from "@/controllers/users/get.users";
+import { getUserById } from "@/controllers/users/get.user";
 
 const router = Router();
 
-router.get("/get-user", protect, authorize(["admin", "user"]), getUser);
-router.put("/update-user", protect, authorize(["admin", "user"]), updateUser);
-router.put("/change-password", protect, changePassword);
-router.get("/get-all-users", protect, authorize(["admin"]), getAllUsers);
+router.get("/profile", protect, authorize(["admin", "user"]), getProfile);
+router.put("/profile", protect, authorize(["admin", "user"]), updateProfile);
+router.put("/password", protect, changePassword);
+router.get("/", protect, authorize(["admin"]), getUsers);
 router.get("/:userId", protect, authorize(["admin"]), getUserById);
 
 export default router;

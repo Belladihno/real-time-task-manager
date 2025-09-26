@@ -1,12 +1,11 @@
-import { logger } from "@/lib/winston";
+import type { Request, Response, NextFunction } from "express";
+import catchAsync from "@/utils/catchAsync";
 import User from "@/models/user.model";
 import ApiError from "@/utils/apiError";
-import catchAsync from "@/utils/catchAsync";
-import type { Request, Response, NextFunction } from "express";
 
-export const getUser = catchAsync(
+export const getUserById = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const userId = req.userId;
+    const userId = req.params.userId;
 
     const user = await User.findById(userId).select("-__v").lean().exec();
 
@@ -15,9 +14,7 @@ export const getUser = catchAsync(
     }
 
     res.status(200).json({
-      Profile: user,
+      user,
     });
-
-    logger.info("User fetched successfully", user);
   }
 );

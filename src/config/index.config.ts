@@ -17,6 +17,7 @@ const config = {
   SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL,
   WHITELIST_ADMINS_MAIL: ["abimbolaomisakin678@gmail.com"],
   defaultResLimit: 10,
+  HMAC_SECRET_KEY: process.env.HMAC_VERIFICATION_CODE_SECRET
 };
 
 export default config;

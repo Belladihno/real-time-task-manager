@@ -55,24 +55,24 @@ const userSchema = new Schema<IUser>(
       type: Boolean,
       default: false
     },
-    emailVerified: {
-      type: Boolean,
-      default: false,
-    },
-    emailVerificationCode: {
+    verificationToken: {
       type: String,
+      default: null,
       select: false,
     },
-    emailVerificationCodeValidation: {
-      type: Number,
+    verificationTokenExpiresAt: {
+      type: Date,
+      default: null,
       select: false,
     },
-    forgotPasswordCode: {
+    resetPasswordToken: {
       type: String,
+      default: null,
       select: false,
     },
-    forgotPasswordCodeValidation: {
-      type: Number,
+    resetPasswordExpiresAt: {
+      type: Date,
+      default: null,
       select: false,
     },
     passwordChangedAt: {

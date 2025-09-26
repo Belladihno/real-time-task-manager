@@ -39,6 +39,8 @@ const emailSchema = Joi.string()
     tlds: { allow: ["com", "net"] },
   });
 
+const emailCodeSchema = Joi.number().required();
+
 const registerSchema = Joi.object({
   firstName: firstNameSchema,
   lastName: lastNameSchema,
@@ -62,7 +64,12 @@ const loginSchema = Joi.object({
 const changePasswordSchema = Joi.object({
   oldPassword: passwordSchema,
   newPassword: passwordSchema,
-  confirmPassword: passwordSchema.valid(Joi.ref('newPassword')),
+  confirmPassword: passwordSchema.valid(Joi.ref("newPassword")),
+});
+
+const resetPasswordSchema = Joi.object({
+  password: passwordSchema,
+  confirmPassword: passwordSchema.valid(Joi.ref("password")),
 });
 
 export default {
@@ -70,4 +77,5 @@ export default {
   loginSchema,
   updateUserSchema,
   changePasswordSchema,
+  resetPasswordSchema,
 };

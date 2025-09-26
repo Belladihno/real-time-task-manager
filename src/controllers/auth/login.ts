@@ -23,10 +23,7 @@ export const login = catchAsync(
       return next(new ApiError(error.details[0].message, 400));
     }
 
-    const existingUser = await User.findOne({ email })
-      .select("+password")
-      .lean()
-      .exec();
+    const existingUser = await User.findOne({ email }).select("+password");
     if (
       !existingUser ||
       !(await doHashValidation(password, existingUser.password))
@@ -37,7 +34,9 @@ export const login = catchAsync(
     const accessToken = generateAccessToken(existingUser._id);
 
     let refreshToken: string;
-    const existingToken = await Token.findOne({userId: existingUser._id}).sort({ createdAt: -1 });
+    const existingToken = await Token.findOne({
+      userId: existingUser._id,
+    }).sort({ createdAt: -1 });
 
     if (existingToken) {
       refreshToken = existingToken.token;
@@ -53,6 +52,9 @@ export const login = catchAsync(
       });
     }
 
+    existingUser.isOnline = true;
+    await existingUser.save();
+
     const cookieOptions: CookieOptions = {
       httpOnly: true,
       secure: config.NODE_ENV === "production",
@@ -63,7 +65,7 @@ export const login = catchAsync(
     res.cookie("refreshToken", refreshToken, cookieOptions);
     res.cookie("accessToken", accessToken, cookieOptions);
 
-    const { password: _, ...userWithoutPassword } = existingUser;
+    const { password: _, ...userWithoutPassword } = existingUser.toObject();
 
     res.status(200).json({
       status: "success",

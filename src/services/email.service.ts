@@ -1,7 +1,7 @@
 import sgMail from "@sendgrid/mail";
 import config from "@/config/index.config";
 import { logger } from "@/lib/winston";
-import { IEmailError, IEmailOptions, IEmailResponse } from "@/utils/interface";
+import { IEmailError, IEmailOptions } from "@/utils/interface";
 
 class EmailService {
   private apiKey: string;

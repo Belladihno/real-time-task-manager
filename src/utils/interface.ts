@@ -13,24 +13,14 @@ export interface IUser {
   role: "user" | "admin";
   status: "active" | "inactive" | "suspended" | "pending-verification";
   isVerified: Boolean;
-  emailVerified: boolean;
-  emailVerificationCode: string;
-  emailVerificationCodeValidation: number;
-  forgotPasswordCode: string;
-  forgotPasswordCodeValidation: number;
+  verificationToken: string | null;
+  verificationTokenExpiresAt: Date | null;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiresAt?: Date | null;
   passwordChangedAt: Date;
   isOnline: boolean;
   isActive: boolean;
   lastSeen: Date;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface IWorkspace {
-  name: string;
-  type: "personal" | "team";
-  ownerId: Types.ObjectId;
-  teamId: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -44,21 +34,10 @@ export interface ITeam {
   updatedAt: Date;
 }
 
-export interface ITeamMembership {
-  userId: Types.ObjectId;
-  teamId: Types.ObjectId;
-  role: "owner" | "admin" | "member";
-  joinedAt: Date;
-  invitedBy?: Types.ObjectId;
-  status: "active" | "suspended" | "inactive";
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface IEmailOptions {
   to: string;
   subject: string;
-  text: string;
+  text?: string;
   html: string;
 }
 
@@ -104,6 +83,50 @@ export interface IPaginationOptions {
   limit?: number;
   select?: string;
   populate?: string;
-  sort?: string | { [key: string]: 1 | -1 }
+  sort?: string | { [key: string]: 1 | -1 };
   filter?: object;
+}
+
+export interface ITask {
+  _id?: Types.ObjectId;
+  title: string;
+  description?: string;
+  status: "todo" | "in-progress" | "review" | "done" | "cancelled";
+  priority: "low" | "medium" | "high" | "urgent";
+  assigneeId?: Types.ObjectId;
+  createdBy: Types.ObjectId;
+  dueDate?: Date;
+  startDate?: Date;
+  completedDate?: Date;
+  tags?: string[];
+  attachments?: string[];
+  isArchived: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ITaskComment {
+  _id?: Types.ObjectId;
+  content: string;
+  authorId: Types.ObjectId;
+  taskId: Types.ObjectId;
+  isEdited: boolean;
+  editedAt?: Date;
+  mentions?: Types.ObjectId[];
+  attachments?: string[];
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+export interface ICreateTaskData {
+  title: string;
+  description?: string;
+  status?: "todo" | "in-progress" | "review" | "done" | "cancelled";
+  priority?: "low" | "medium" | "high" | "urgent";
+  assigneeId?: string;
+  dueDate?: string;
+  startDate?: string;
+  tags?: string[];
 }

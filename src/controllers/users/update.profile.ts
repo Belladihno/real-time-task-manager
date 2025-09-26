@@ -6,7 +6,7 @@ import validator from "@/middlewares/validator";
 import User from "@/models/user.model";
 import { IUpdataData } from "@/utils/interface";
 
-export const updateUser = catchAsync(
+export const updateProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.userId;
 
@@ -52,7 +52,10 @@ export const updateUser = catchAsync(
     const updatedProfile = await User.findByIdAndUpdate(userId, updateData, {
       new: true,
       runValidators: true,
-    });
+    })
+      .select("-__v")
+      .lean()
+      .exec();
 
     res.status(200).json({
       Profile: updatedProfile,

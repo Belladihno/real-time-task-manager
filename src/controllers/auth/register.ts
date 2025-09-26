@@ -75,7 +75,7 @@ export const register = catchAsync(
     await Token.create({ token: refreshToken, userId: newUser._id });
     logger.info("Refresh Token created for user", {
       userId: newUser._id,
-      toen: refreshToken,
+      token: refreshToken,
     });
 
     const cookieOptions: CookieOptions = {
