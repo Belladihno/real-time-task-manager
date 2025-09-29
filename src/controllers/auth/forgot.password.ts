@@ -1,4 +1,4 @@
-import User from "@/models/user.model";
+import User from "@/models/user";
 import type { NextFunction, Request, Response } from "express";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";

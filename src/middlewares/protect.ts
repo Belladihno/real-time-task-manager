@@ -2,11 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { logger } from "@/lib/winston";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
-import User from "@/models/user.model";
+import User from "@/models/user";
 import { verifyAccessToken } from "@/lib/jwt";
 import { Types } from "mongoose";
 import { IUser, IJWTPayload } from "@/utils/interface";
-import BlacklistToken from "@/models/blacklist.token.model";
+import BlacklistToken from "@/models/blacklist.token";
 
 const extractToken = (req: Request): string | null => {
   if (req.cookies?.accessToken) {

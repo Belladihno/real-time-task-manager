@@ -1,4 +1,4 @@
-import User from "@/models/user.model";
+import User from "@/models/user";
 import type { CookieOptions, NextFunction, Request, Response } from "express";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
@@ -7,7 +7,7 @@ import { logger } from "@/lib/winston";
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
 import { doHashValidation } from "@/utils/hashing";
 import { IUser } from "@/utils/interface";
-import Token from "@/models/token.model";
+import Token from "@/models/token";
 import config from "@/config/index.config";
 
 type UserData = Pick<IUser, "email" | "password">;

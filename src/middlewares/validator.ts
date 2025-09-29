@@ -1,5 +1,19 @@
 import Joi from "joi";
 
+const nameSchema = Joi.string().required().trim().min(2).max(100).messages({
+  "string.min": "Name must contain at least 2 characters",
+  "string.max": "Name cannot exceed 100 characters",
+});
+
+const descriptionSchema = Joi.string().optional().trim().max(500).messages({
+  "string.max": "Description cannot exceed 500 characters",
+});
+
+const idSchema = Joi.string().required().hex().length(24).messages({
+  "string.hex": "Invalid ID format",
+  "string.length": "Invalid ID length",
+});
+
 const firstNameSchema = Joi.string().required().trim().min(3).messages({
   "string-min": "firstname must contain at least 3 characters",
 });
@@ -72,10 +86,42 @@ const resetPasswordSchema = Joi.object({
   confirmPassword: passwordSchema.valid(Joi.ref("password")),
 });
 
+const createProjectSchema = Joi.object({
+  name: nameSchema,
+  description: descriptionSchema,
+  workspaceId: idSchema,
+  priority: Joi.string()
+    .optional()
+    .valid("low", "medium", "high", "critical")
+    .default("medium"),
+  visibility: Joi.string()
+    .optional()
+    .valid("public", "private")
+    .default("private"),
+  startDate: Joi.date().optional().messages({
+    "date.base": "Invalid start date format",
+  }),
+  dueDate: Joi.date().optional().greater(Joi.ref("startDate")).messages({
+    "date.greater": "Due date must be after start date",
+  }),
+});
+
+const updateProjectSchema = Joi.object({
+  name: nameSchema.optional(),
+  description: descriptionSchema,
+  status: Joi.string().optional().valid("active", "on-hold", "completed", "cancelled"),
+  priority: Joi.string().optional().valid("low", "medium", "high", "critical"),
+  visibility: Joi.string().optional().valid("public", "private"),
+  startDate: Joi.date().optional(),
+  dueDate: Joi.date().optional(),
+});
+
 export default {
   registerSchema,
   loginSchema,
   updateUserSchema,
   changePasswordSchema,
   resetPasswordSchema,
+  createProjectSchema,
+  updateProjectSchema
 };

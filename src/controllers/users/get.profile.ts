@@ -1,5 +1,5 @@
 import { logger } from "@/lib/winston";
-import User from "@/models/user.model";
+import User from "@/models/user";
 import ApiError from "@/utils/apiError";
 import catchAsync from "@/utils/catchAsync";
 import type { Request, Response, NextFunction } from "express";

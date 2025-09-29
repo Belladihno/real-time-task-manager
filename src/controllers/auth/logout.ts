@@ -1,10 +1,10 @@
 import type { CookieOptions, NextFunction, Request, Response } from "express";
 import catchAsync from "@/utils/catchAsync";
 import { logger } from "@/lib/winston";
-import Token from "@/models/token.model";
+import Token from "@/models/token";
 import config from "@/config/index.config";
 import { verifyAccessToken } from "@/lib/jwt";
-import BlacklistToken from "@/models/blacklist.token.model";
+import BlacklistToken from "@/models/blacklist.token";
 
 export const logout = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

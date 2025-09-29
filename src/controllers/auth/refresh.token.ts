@@ -1,5 +1,5 @@
 import ApiError from "@/utils/apiError";
-import Token from "@/models/token.model";
+import Token from "@/models/token";
 import { generateAccessToken, verifyRefreshToken } from "@/lib/jwt";
 import { Types } from "mongoose";
 import { Request, Response, NextFunction, CookieOptions } from "express";

@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import catchAsync from "@/utils/catchAsync";
-import User from "@/models/user.model";
+import User from "@/models/user";
 import config from "@/config/index.config";
 import { paginate } from "@/utils/pagination";
 

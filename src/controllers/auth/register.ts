@@ -1,4 +1,6 @@
-import User from "@/models/user.model";
+import User from "@/models/user";
+import Workspace from "@/models/workspace";
+import WorkspaceMember from "@/models/workspace.member";
 import type { CookieOptions, NextFunction, Request, Response } from "express";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
@@ -7,7 +9,7 @@ import { logger } from "@/lib/winston";
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
 import { doHash } from "@/utils/hashing";
 import { IUser } from "@/utils/interface";
-import Token from "@/models/token.model";
+import Token from "@/models/token";
 import config from "@/config/index.config";
 
 type UserData = Pick<
@@ -69,6 +71,25 @@ export const register = catchAsync(
       role,
     });
 
+    const personalWorkspace = await Workspace.create({
+      name: `${displayName}'s Space`,
+      ownerId: newUser._id,
+    });
+
+    await WorkspaceMember.create({
+      userId: newUser._id,
+      workspaceId: personalWorkspace._id,
+      role: "owner",
+      permissions: {
+        canCreateProjects: true,
+        canManageMembers: true,
+        canDeleteWorkspace: true,
+        canModifySettings: true,
+      },
+    });
+
+    logger.info("Personal workspace creating created for user:", newUser._id);
+
     const accessToken = generateAccessToken(newUser._id);
     const refreshToken = generateRefreshToken(newUser._id);
 
@@ -94,6 +115,7 @@ export const register = catchAsync(
       status: "success",
       message: "User registered successufully",
       user: userWithoutPassword,
+      personalWorkspace,
       accessToken,
     });
 

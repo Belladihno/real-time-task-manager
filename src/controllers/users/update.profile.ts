@@ -3,7 +3,7 @@ import { logger } from "@/lib/winston";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import validator from "@/middlewares/validator";
-import User from "@/models/user.model";
+import User from "@/models/user";
 import { IUpdataData } from "@/utils/interface";
 
 export const updateProfile = catchAsync(
