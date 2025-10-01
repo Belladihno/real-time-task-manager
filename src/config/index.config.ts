@@ -17,6 +17,7 @@ const config = {
   SENDGRID_FROM_EMAIL: process.env.SENDGRID_FROM_EMAIL,
   WHITELIST_ADMINS_MAIL: ["abimbolaomisakin678@gmail.com"],
   defaultResLimit: 10,
+  maxWorkspacePerUser: parseInt(process.env.MAX_WORKSPACE_PER_USER || "10"),
 };
 
 export default config;

@@ -4,7 +4,7 @@ import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import { logger } from "@/lib/winston";
 import { IUser } from "@/utils/interface";
-import { generateToken } from "@/helpers/generateToken";
+import { generateToken } from "@/helpers/generate.token";
 import emailService from "@/services/email.service";
 import { hashToken } from "@/utils/hashing";
 

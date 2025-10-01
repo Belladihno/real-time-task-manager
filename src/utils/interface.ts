@@ -206,7 +206,6 @@ export interface IProjectMember {
   updatedAt: Date;
 }
 
-
 export interface ICreateProjectData {
   name: string;
   description?: string;
@@ -215,4 +214,14 @@ export interface ICreateProjectData {
   visibility?: "public" | "private";
   startDate?: string;
   dueDate?: string;
+}
+
+export interface ICreateWorkspaceData {
+  name: string;
+  description?: string;
+  settings?: {
+    isPublic?: boolean;
+    allowMemberInvites?: boolean;
+    defaultProjectVisibility?: "public" | "private";
+  };
 }

@@ -3,7 +3,7 @@ import type { NextFunction, Request, Response } from "express";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import { logger } from "@/lib/winston";
-import { generateToken } from "@/helpers/generateToken";
+import { generateToken } from "@/helpers/generate.token";
 import { hashToken } from "@/utils/hashing";
 import emailService from "@/services/email.service";
 

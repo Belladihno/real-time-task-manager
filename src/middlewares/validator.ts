@@ -109,11 +109,36 @@ const createProjectSchema = Joi.object({
 const updateProjectSchema = Joi.object({
   name: nameSchema.optional(),
   description: descriptionSchema,
-  status: Joi.string().optional().valid("active", "on-hold", "completed", "cancelled"),
+  status: Joi.string()
+    .optional()
+    .valid("active", "on-hold", "completed", "cancelled"),
   priority: Joi.string().optional().valid("low", "medium", "high", "critical"),
   visibility: Joi.string().optional().valid("public", "private"),
   startDate: Joi.date().optional(),
   dueDate: Joi.date().optional(),
+});
+
+const createWorkspaceSchema = Joi.object({
+  name: nameSchema,
+  description: descriptionSchema,
+  settings: Joi.object({
+    isPublic: Joi.boolean().optional(),
+    allowMemberInvites: Joi.boolean().optional(),
+    defaultProjectVisibility: Joi.string()
+      .optional()
+      .valid("public", "private"),
+  }).optional(),
+});
+const updateWorkspaceSchema = Joi.object({
+  name: nameSchema.optional(),
+  description: descriptionSchema,
+  settings: Joi.object({
+    isPublic: Joi.boolean().optional(),
+    allowMemberInvites: Joi.boolean().optional(),
+    defaultProjectVisibility: Joi.string()
+      .optional()
+      .valid("public", "private"),
+  }).optional(),
 });
 
 export default {
@@ -123,5 +148,7 @@ export default {
   changePasswordSchema,
   resetPasswordSchema,
   createProjectSchema,
-  updateProjectSchema
+  updateProjectSchema,
+  createWorkspaceSchema,
+  updateWorkspaceSchema
 };
