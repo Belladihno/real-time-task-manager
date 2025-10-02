@@ -128,27 +128,31 @@ export interface IPaginationOptions {
 
 export interface ITask {
   _id?: Types.ObjectId;
-  title: string;
+  name: string;
   description?: string;
+  slug: string;
+  projectId?: Types.ObjectId;
   status: "todo" | "in-progress" | "review" | "done" | "cancelled";
   priority: "low" | "medium" | "high" | "urgent";
-  assigneeId?: Types.ObjectId;
+  assigneeIds?: Types.ObjectId[];
   createdBy: Types.ObjectId;
   dueDate?: Date;
   startDate?: Date;
   completedDate?: Date;
   tags?: string[];
   attachments?: string[];
+  isLocked: boolean;
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface ITaskComment {
+export interface IComment {
   _id?: Types.ObjectId;
   content: string;
   authorId: Types.ObjectId;
-  taskId: Types.ObjectId;
+  commentType: "Task" | "Project";
+  commentTypeId: Types.ObjectId;
   isEdited: boolean;
   editedAt?: Date;
   mentions?: Types.ObjectId[];
@@ -159,14 +163,16 @@ export interface ITaskComment {
 }
 
 export interface ICreateTaskData {
-  title: string;
+  name: string;
   description?: string;
-  status?: "todo" | "in-progress" | "review" | "done" | "cancelled";
+  projectId: string;
+  status?: "todo" | "in-progress" | "review" | "completed" | "cancelled";
   priority?: "low" | "medium" | "high" | "urgent";
-  assigneeId?: string;
+  assigneeIds?: string[]; 
   dueDate?: string;
   startDate?: string;
   tags?: string[];
+  isLocked?: boolean;
 }
 
 export interface IWorkspaceMember {
@@ -224,4 +230,18 @@ export interface ICreateWorkspaceData {
     allowMemberInvites?: boolean;
     defaultProjectVisibility?: "public" | "private";
   };
+}
+
+export interface ISubTask {
+  _id?: Types.ObjectId;
+  name: string;
+  slug: string;
+  taskId: Types.ObjectId;
+  status: "todo" | "done";
+  assigneeId?: Types.ObjectId;
+  order: number;
+  completedAt?: Date;
+  createdBy: Types.ObjectId;
+  createdAt: Date;
+  updatedAt: Date;
 }

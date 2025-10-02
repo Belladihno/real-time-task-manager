@@ -13,11 +13,6 @@ router.get("/", protect, getProjects);
 router.post("/", protect, createProject);
 router.get("/:projectId", protect, getProjectById);
 router.put("/:projectId", protect, updateProject);
-router.delete(
-  "/:projectId",
-  protect,
-  authorize(["admin", "user"]),
-  deleteProject
-);
+router.delete("/:projectId", protect, deleteProject);
 
 export default router;

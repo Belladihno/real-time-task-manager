@@ -3,7 +3,6 @@ import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import Project from "@/models/project";
 import ProjectMember from "@/models/project.member";
-import WorkspaceMember from "@/models/workspace.member";
 import validator from "@/middlewares/validator";
 import { logger } from "@/lib/winston";
 
@@ -36,13 +35,20 @@ export const updateProject = catchAsync(
       updateData.completedDate = new Date();
     }
 
-    const updatedProject = await Project.findByIdAndUpdate(
-      projectId,
-      updateData,
-      { new: true, runValidators: true }
-    )
+    if (updateData.name) {
+      project.name = updateData.name;
+      project.markModified("name");
+    }
+
+    if (updateData.description !== undefined) {
+      project.description = updateData.description;
+    }
+
+    await project.save();
+
+    const updatedProject = await Project.findById(projectId)
       .populate("workspaceId", "name slug")
-      .populate("ownerId", "firstName lastName displayName email");
+      .populate("ownerId", "displayName email");
 
     res.status(200).json({
       status: "success",

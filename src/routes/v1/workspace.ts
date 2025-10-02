@@ -9,7 +9,7 @@ import { deleteWorkspace } from "@/controllers/workspace/delete.workspace";
 const router = Router();
 
 router.post("/", protect, createWorkspace);
-router.get("/:workspaceId", getWorkspaceById);
+router.get("/:workspaceId", protect, getWorkspaceById);
 router.get("/", protect, getWorkspaces);
 router.put("/:workspaceId", protect, updateWorkspace);
 router.delete("/:workspaceId", protect, deleteWorkspace);

@@ -3,6 +3,7 @@ import authRoutes from "@/routes/v1/auth";
 import userRoutes from "@/routes/v1/user";
 import projectRoutes from "@/routes/v1/project";
 import workspaceRoutes from "@/routes/v1/workspace";
+import taskRoutes from "@/routes/v1/task";
 
 const router = Router();
 
@@ -19,5 +20,6 @@ router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/projects", projectRoutes);
 router.use("/workspaces", workspaceRoutes);
+router.use("/tasks", taskRoutes);
 
 export default router;

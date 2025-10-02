@@ -2,8 +2,6 @@ import type { Request, Response, NextFunction } from "express";
 import Workspace from "@/models/workspace";
 import WorkspaceMember from "@/models/workspace.member";
 import catchAsync from "@/utils/catchAsync";
-import config from "@/config/index.config";
-import { paginate } from "@/utils/pagination";
 import ApiError from "@/utils/apiError";
 
 export const getWorkspaceById = catchAsync(

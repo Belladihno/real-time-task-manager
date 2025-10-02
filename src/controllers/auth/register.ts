@@ -88,7 +88,7 @@ export const register = catchAsync(
       },
     });
 
-    logger.info("Personal workspace creating created for user:", newUser._id);
+    logger.info("Personal workspace created for user:", newUser._id);
 
     const accessToken = generateAccessToken(newUser._id);
     const refreshToken = generateRefreshToken(newUser._id);

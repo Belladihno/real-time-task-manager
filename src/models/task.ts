@@ -1,15 +1,27 @@
 import { Schema, model } from "mongoose";
 import { ITask } from "@/utils/interface";
+import { createSlug, generateUniqueSlug } from "@/helpers/generate.slug";
 
 const taskSchema = new Schema<ITask>(
   {
-    title: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
     description: {
       type: String,
+      trim: true,
+    },
+    projectId: {
+      type: Schema.Types.ObjectId,
+      ref: "Project",
+      required: true,
+    },
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
       trim: true,
     },
     status: {
@@ -33,10 +45,12 @@ const taskSchema = new Schema<ITask>(
     completedDate: {
       type: Date,
     },
-    assigneeId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
+    assigneeIds: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
@@ -50,6 +64,10 @@ const taskSchema = new Schema<ITask>(
       type: [String],
       default: [],
     },
+    isLocked: {
+      type: Boolean,
+      default: false,
+    },
     isArchived: {
       type: Boolean,
       default: false,
@@ -57,5 +75,15 @@ const taskSchema = new Schema<ITask>(
   },
   { timestamps: true }
 );
+
+taskSchema.pre("save", async function (next) {
+  if (!this.isModified("name")) return next();
+
+  const baseSlug = createSlug(this.name);
+
+  this.slug = await generateUniqueSlug(baseSlug, this.constructor, this._id);
+
+  next();
+});
 
 export default model<ITask>("Task", taskSchema);

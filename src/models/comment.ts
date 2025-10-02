@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { ITaskComment } from "@/utils/interface";
+import { IComment } from "@/utils/interface";
 
-const taskCommentSchema = new Schema<ITaskComment>(
+const commentSchema = new Schema<IComment>(
   {
     content: {
       type: String,
@@ -14,10 +14,15 @@ const taskCommentSchema = new Schema<ITaskComment>(
       ref: "User",
       required: true,
     },
-    taskId: {
-      type: Schema.Types.ObjectId,
-      ref: "Task",
+    commentType: {
+      type: String,
+      enum: ["Task", "Project"],
       required: true,
+    },
+    commentTypeId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      refPath: "commentType",
     },
     isEdited: {
       type: Boolean,
@@ -26,11 +31,12 @@ const taskCommentSchema = new Schema<ITaskComment>(
     editedAt: {
       type: Date,
     },
-    mentions: {
-      type: [Schema.Types.ObjectId],
-      ref: "User",
-      default: [],
-    },
+    mentions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     attachments: {
       type: [String],
       default: [],
@@ -45,4 +51,4 @@ const taskCommentSchema = new Schema<ITaskComment>(
   }
 );
 
-export default model<ITaskComment>("TaskComment", taskCommentSchema);
+export default model<IComment>("Comment", commentSchema);

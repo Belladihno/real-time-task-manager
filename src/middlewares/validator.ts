@@ -141,6 +141,35 @@ const updateWorkspaceSchema = Joi.object({
   }).optional(),
 });
 
+const createTaskSchema = Joi.object({
+  name: nameSchema,
+  description: descriptionSchema,
+  projectId: idSchema,
+  status: Joi.string()
+    .optional()
+    .valid("todo", "in-progress", "review", "completed", "cancelled"),
+  priority: Joi.string().optional().valid("low", "medium", "high", "urgent"),
+  assigneeIds: Joi.array().items(idSchema).optional(),
+  dueDate: Joi.date().optional(),
+  startDate: Joi.date().optional(),
+  tags: Joi.array().items(Joi.string()).optional(),
+  isLocked: Joi.boolean().optional(),
+});
+
+const updateTaskSchema = Joi.object({
+  name: nameSchema.optional(),
+  description: descriptionSchema,
+  status: Joi.string()
+    .optional()
+    .valid("todo", "in-progress", "review", "completed", "cancelled"),
+  priority: Joi.string().optional().valid("low", "medium", "high", "urgent"),
+  assigneeIds: Joi.array().items(idSchema).optional(),
+  dueDate: Joi.date().optional(),
+  startDate: Joi.date().optional(),
+  completedDate: Joi.date().optional(),
+  tags: Joi.array().items(Joi.string()).optional(),
+});
+
 export default {
   registerSchema,
   loginSchema,
@@ -150,5 +179,7 @@ export default {
   createProjectSchema,
   updateProjectSchema,
   createWorkspaceSchema,
-  updateWorkspaceSchema
+  updateWorkspaceSchema,
+  createTaskSchema,
+  updateTaskSchema,
 };
