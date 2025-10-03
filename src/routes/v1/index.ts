@@ -4,6 +4,7 @@ import userRoutes from "@/routes/v1/user";
 import projectRoutes from "@/routes/v1/project";
 import workspaceRoutes from "@/routes/v1/workspace";
 import taskRoutes from "@/routes/v1/task";
+import subTaskRoutes from "@/routes/v1/sub.task";
 
 const router = Router();
 
@@ -21,5 +22,7 @@ router.use("/users", userRoutes);
 router.use("/projects", projectRoutes);
 router.use("/workspaces", workspaceRoutes);
 router.use("/tasks", taskRoutes);
+router.use("/sub-tasks", subTaskRoutes);
+
 
 export default router;

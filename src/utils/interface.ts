@@ -141,7 +141,6 @@ export interface ITask {
   completedDate?: Date;
   tags?: string[];
   attachments?: string[];
-  isLocked: boolean;
   isArchived: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -239,7 +238,6 @@ export interface ISubTask {
   taskId: Types.ObjectId;
   status: "todo" | "done";
   assigneeId?: Types.ObjectId;
-  order: number;
   completedAt?: Date;
   createdBy: Types.ObjectId;
   createdAt: Date;

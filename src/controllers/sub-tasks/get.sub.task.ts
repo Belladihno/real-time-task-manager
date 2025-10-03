@@ -2,18 +2,24 @@ import type { Request, Response, NextFunction } from "express";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import Task from "@/models/task";
-import Project from "@/models/project";
 import ProjectMember from "@/models/project.member";
-import { logger } from "@/lib/winston";
+import SubTask from "@/models/sub.task";
 
-export const deleteTask = catchAsync(
+export const getSubTaskById = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.userId;
-    const { taskId } = req.params;
+    const { subTaskId } = req.params;
 
-    const task = await Task.findById(taskId);
+    const subtask = await SubTask.findById(subTaskId)
+      .populate("assigneeId", "firstName lastName displayName email")
+      .populate("createdBy", "firstName lastName displayName email");
+    if (!subtask) {
+      return next(new ApiError("sub task not found", 404));
+    }
+
+    const task = await Task.findById(subtask.taskId);
     if (!task) {
-      return next(new ApiError("Task not found", 404));
+      return next(new ApiError("Parent task not found", 404));
     }
 
     const membership = await ProjectMember.findOne({
@@ -21,25 +27,13 @@ export const deleteTask = catchAsync(
       userId,
       isActive: true,
     });
-
-    if (!membership || !membership.permissions.canDeleteTasks) {
+    if (!membership) {
       return next(new ApiError("Access denied to this project", 403));
     }
 
-    await Task.findByIdAndUpdate(taskId, { isArchived: true });
-
-    await Project.findByIdAndUpdate(task.projectId, {
-      $inc: { taskCount: -1 },
-    });
-
     res.status(200).json({
       status: "success",
-      message: "Task deleted successfully",
-    });
-
-    logger.info("Task deleted successfully", {
-      taskId,
-      userId,
+      subtask,
     });
   }
 );

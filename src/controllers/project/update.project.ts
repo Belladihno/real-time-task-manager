@@ -31,24 +31,22 @@ export const updateProject = catchAsync(
       return next(new ApiError("Permission denied to modify project", 403));
     }
 
-    if (updateData.status === "completed" && !updateData.completedDate) {
+    if (updateData.status === "completed" && !project.completedDate) {
       updateData.completedDate = new Date();
     }
 
-    if (updateData.name) {
-      project.name = updateData.name;
-      project.markModified("name");
-    }
+    Object.assign(project, updateData);
 
-    if (updateData.description !== undefined) {
-      project.description = updateData.description;
+    if (updateData.name) {
+      project.markModified("name");
     }
 
     await project.save();
 
-    const updatedProject = await Project.findById(projectId)
-      .populate("workspaceId", "name slug")
-      .populate("ownerId", "displayName email");
+    const updatedProject = await project.populate([
+      { path: "workspaceId", select: "name slug" },
+      { path: "ownerId", select: "displayName email" },
+    ]);
 
     res.status(200).json({
       status: "success",

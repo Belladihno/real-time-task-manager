@@ -32,24 +32,17 @@ export const updateWorkspace = catchAsync(
       return next(new ApiError("Permission denied to modify workspace", 403));
     }
 
+    Object.assign(workspace, updateData);
+
     if (updateData.name) {
-      workspace.name = updateData.name;
       workspace.markModified("name");
-    }
-    if (updateData.description !== undefined) {
-      workspace.description = updateData.description;
-    }
-    if (updateData.settings) {
-      workspace.settings = { ...workspace.settings, ...updateData.settings };
-      workspace.markModified("settings");
     }
 
     await workspace.save();
 
-    const updatedWorkspace = await Workspace.findById(workspaceId).populate(
-      "ownerId",
-      "name"
-    );
+    const updatedWorkspace = await workspace.populate([
+      { path: "ownerId", select: "firstName lastName displayName email" },
+    ]);
 
     res.status(200).json({
       status: "success",

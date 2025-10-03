@@ -64,10 +64,6 @@ const taskSchema = new Schema<ITask>(
       type: [String],
       default: [],
     },
-    isLocked: {
-      type: Boolean,
-      default: false,
-    },
     isArchived: {
       type: Boolean,
       default: false,

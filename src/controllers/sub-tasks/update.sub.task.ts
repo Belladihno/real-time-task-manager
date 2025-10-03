@@ -5,19 +5,25 @@ import validator from "@/middlewares/validator";
 import { logger } from "@/lib/winston";
 import Task from "@/models/task";
 import ProjectMember from "@/models/project.member";
+import SubTask from "@/models/sub.task";
 
-export const updateTask = catchAsync(
+export const updateSubTask = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.userId;
-    const { taskId } = req.params;
+    const { subTaskId } = req.params;
     const updateData = req.body;
 
-    const { error } = validator.updateTaskSchema.validate(updateData);
+    const { error } = validator.updateSubTaskSchema.validate(updateData);
     if (error) {
       return next(new ApiError(error.details[0].message, 400));
     }
 
-    const task = await Task.findById(taskId);
+    const subtask = await SubTask.findById(subTaskId);
+    if (!subtask) {
+      return next(new ApiError("sub task not found", 404));
+    }
+
+    const task = await Task.findById(subtask.taskId);
     if (!task) {
       return next(new ApiError("Task not found", 404));
     }
@@ -31,32 +37,31 @@ export const updateTask = catchAsync(
       return next(new ApiError("Access denied to this project", 403));
     }
 
-    if (updateData.status === "completed" && !task.completedDate) {
-      updateData.completedDate = new Date();
+    if (updateData.status === "done" && !subtask.completedAt) {
+      updateData.completedAt = new Date();
     }
 
-    Object.assign(task, updateData);
+    Object.assign(subtask, updateData);
 
     if (updateData.name) {
-      task.markModified("name");
+      subtask.markModified("name");
     }
 
-    await task.save();
+    await subtask.save();
 
-    const updatedTask = await task.populate([
-      { path: "projectId", select: "name" },
-      { path: "assigneeIds", select: "firstName" },
-      { path: "createdBy", select: "firstName" }
+    const updatedSubTask = await subtask.populate([
+      { path: "assigneeId", select: "firstName lastName displayName email" },
+      { path: "createdBy", select: "firstName lastName displayName email" }
     ]);
 
     res.status(200).json({
       status: "success",
-      message: "Task updated successfully",
-      task: updatedTask,
+      message: "Subtask updated successfully",
+      subtask: updatedSubTask
     });
 
-    logger.info("Task updated successfully", {
-      taskId,
+    logger.info("Subtask updated successfully", {
+      subTaskId,
       userId,
     });
   }

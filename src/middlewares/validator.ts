@@ -5,9 +5,14 @@ const nameSchema = Joi.string().required().trim().min(2).max(100).messages({
   "string.max": "Name cannot exceed 100 characters",
 });
 
-const descriptionSchema = Joi.string().optional().trim().max(500).messages({
-  "string.max": "Description cannot exceed 500 characters",
-});
+const descriptionSchema = Joi.string()
+  .optional()
+  .trim()
+  .allow("", null)
+  .max(500)
+  .messages({
+    "string.max": "Description cannot exceed 500 characters",
+  });
 
 const idSchema = Joi.string().required().hex().length(24).messages({
   "string.hex": "Invalid ID format",
@@ -170,6 +175,18 @@ const updateTaskSchema = Joi.object({
   tags: Joi.array().items(Joi.string()).optional(),
 });
 
+const createSubTaskSchema = Joi.object({
+  name: nameSchema,
+  assigneeId: idSchema.optional(),
+});
+
+const updateSubTaskSchema = Joi.object({
+  name: nameSchema.optional(),
+  status: Joi.string().optional().valid("todo", "done"),
+  assigneeId: idSchema.optional(),
+  completedAt: Joi.date().optional(),
+});
+
 export default {
   registerSchema,
   loginSchema,
@@ -182,4 +199,6 @@ export default {
   updateWorkspaceSchema,
   createTaskSchema,
   updateTaskSchema,
+  createSubTaskSchema,
+  updateSubTaskSchema,
 };

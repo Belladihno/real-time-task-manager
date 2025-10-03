@@ -31,10 +31,6 @@ const subTaskSchema = new Schema<ISubTask>(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    order: {
-      type: Number,
-      default: 0,
-    },
     completedAt: {
       type: Date,
     },
