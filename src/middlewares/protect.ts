@@ -50,7 +50,10 @@ const validateUser = async (
     throw new ApiError("Invalid user ID format", 401);
   }
 
-  const user = await User.findById(userId).select("+isActive");
+  const user = await User.findById(userId)
+    .select("isActive role passwordChangedAt email displayName _id")
+    .lean()
+    .exec();
 
   if (!user) {
     logger.warn("User not found", { userId });
@@ -66,6 +69,8 @@ const validateUser = async (
     throw new ApiError("Account is deactivated. Contact support", 401);
   }
 
+  const userDoc = user as unknown as IUser;
+
   if (checkPasswordChanged(user, tokenIssuedAt)) {
     logger.warn("Password recently changed", { userId });
     throw new ApiError(
@@ -74,15 +79,15 @@ const validateUser = async (
     );
   }
 
-  return user as IUser;
+  return userDoc;
 };
 
 const isBlacklist = async (token: string): Promise<void> => {
-  const blacklistedToken = await BlacklistToken.findOne({ token });
+  const blacklistedToken = await BlacklistToken.exists({ token });
   if (blacklistedToken) {
     logger.warn("Attempt to use blacklisted token", {
       tokenId: blacklistedToken._id,
-      blacklistedAt: blacklistedToken.createdAt,
+      blacklistedAt: blacklistedToken._id,
     });
     throw new ApiError("Token has been blacklisted. Please login again!", 401);
   }
