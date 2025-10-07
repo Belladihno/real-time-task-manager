@@ -8,7 +8,7 @@ export const paginate = async (
   const page: number = options.page || 1;
   const limit: number = options.limit || 10;
   const select: string = options.select || "-__v";
-  const populate: string = options.populate || "";
+  const populate = options.populate || "";
   const sort = options.sort || "";
   const filter: object = options.filter || {};
 
@@ -21,7 +21,15 @@ export const paginate = async (
   }
 
   if (populate) {
-    query = query.populate(populate);
+    if (Array.isArray(populate)) {
+      populate.forEach(pop => {
+        query = query.populate(pop);
+      });
+    } else if (typeof populate === 'object') {
+      query = query.populate(populate);
+    } else {
+      query = query.populate(populate);
+    }
   }
 
   if (sort) {

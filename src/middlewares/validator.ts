@@ -187,6 +187,16 @@ const updateSubTaskSchema = Joi.object({
   completedAt: Joi.date().optional(),
 });
 
+const createCommentSchema = Joi.object({
+  content: Joi.string().required().trim().min(2).max(2000).messages({
+    "string.max": "content cannot exceed 2000 characters",
+  }),
+  commentType: Joi.string().required().valid("Task", "Project"),
+  commentTypeId: idSchema,
+  mentions: idSchema.optional(),
+  attachments: Joi.array().items(Joi.string()).optional().default([]),
+});
+
 export default {
   registerSchema,
   loginSchema,
@@ -201,4 +211,5 @@ export default {
   updateTaskSchema,
   createSubTaskSchema,
   updateSubTaskSchema,
+  createCommentSchema
 };

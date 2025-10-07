@@ -5,6 +5,7 @@ import projectRoutes from "@/routes/v1/project";
 import workspaceRoutes from "@/routes/v1/workspace";
 import taskRoutes from "@/routes/v1/task";
 import subTaskRoutes from "@/routes/v1/sub.task";
+import commentRoutes from "@/routes/v1/comment";
 
 const router = Router();
 
@@ -23,6 +24,6 @@ router.use("/projects", projectRoutes);
 router.use("/workspaces", workspaceRoutes);
 router.use("/tasks", taskRoutes);
 router.use("/sub-tasks", subTaskRoutes);
-
+router.use("/comments", commentRoutes);
 
 export default router;

@@ -6,8 +6,6 @@ const commentSchema = new Schema<IComment>(
     content: {
       type: String,
       required: true,
-      trim: true,
-      maxlength: 2000,
     },
     authorId: {
       type: Schema.Types.ObjectId,
@@ -40,10 +38,6 @@ const commentSchema = new Schema<IComment>(
     attachments: {
       type: [String],
       default: [],
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false,
     },
   },
   {

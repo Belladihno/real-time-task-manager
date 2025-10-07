@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { PopulateOptions, Types } from "mongoose";
 
 export interface IUser {
   _id?: Types.ObjectId;
@@ -121,7 +121,7 @@ export interface IPaginationOptions {
   page?: number;
   limit?: number;
   select?: string;
-  populate?: string;
+  populate?: string | PopulateOptions | PopulateOptions[];
   sort?: string | { [key: string]: 1 | -1 };
   filter?: object;
 }
@@ -167,7 +167,7 @@ export interface ICreateTaskData {
   projectId: string;
   status?: "todo" | "in-progress" | "review" | "completed" | "cancelled";
   priority?: "low" | "medium" | "high" | "urgent";
-  assigneeIds?: string[]; 
+  assigneeIds?: string[];
   dueDate?: string;
   startDate?: string;
   tags?: string[];
@@ -242,4 +242,12 @@ export interface ISubTask {
   createdBy: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ICreateCommentData {
+  content: string;
+  commentType: "Task" | "Project";
+  commentTypeId: Types.ObjectId;
+  mentions?: Types.ObjectId;
+  attachments?: [string];
 }
