@@ -188,13 +188,19 @@ const updateSubTaskSchema = Joi.object({
 });
 
 const createCommentSchema = Joi.object({
-  content: Joi.string().required().trim().min(2).max(2000).messages({
+  content: Joi.string().required().trim().max(2000).messages({
     "string.max": "content cannot exceed 2000 characters",
   }),
   commentType: Joi.string().required().valid("Task", "Project"),
   commentTypeId: idSchema,
   mentions: idSchema.optional(),
   attachments: Joi.array().items(Joi.string()).optional().default([]),
+});
+
+const updateCommentSchema = Joi.object({
+  content: Joi.string().required().trim().max(2000).messages({
+    "string.max": "content cannot exceed 2000 characters",
+  }),
 });
 
 export default {
@@ -211,5 +217,6 @@ export default {
   updateTaskSchema,
   createSubTaskSchema,
   updateSubTaskSchema,
-  createCommentSchema
+  createCommentSchema,
+  updateCommentSchema
 };
