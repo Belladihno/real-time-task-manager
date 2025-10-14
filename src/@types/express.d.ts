@@ -1,4 +1,4 @@
-import { IUser } from "@/utils/interface";
+import { IUser } from "@/@types/interface";
 import * as express from "express";
 import { Types } from "mongoose";
 

@@ -9,7 +9,7 @@ const router = Router();
 
 router.post("/", protect, createComment);
 router.get("/", protect, getComments);
-router.put("/:commentId", protect, updateComment);
+router.patch("/:commentId", protect, updateComment);
 router.delete("/:commentId", protect, deleteComment);
 
 export default router;

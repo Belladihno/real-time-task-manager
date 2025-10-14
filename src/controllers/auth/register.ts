@@ -8,9 +8,10 @@ import validator from "@/middlewares/validator";
 import { logger } from "@/lib/winston";
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
 import { doHash } from "@/utils/hashing";
-import { IUser } from "@/utils/interface";
+import { IUser } from "@/@types/interface";
 import Token from "@/models/token";
 import config from "@/config/index.config";
+import ms from "ms";
 
 type UserData = Pick<
   IUser,
@@ -83,7 +84,7 @@ export const register = catchAsync(
       permissions: {
         canCreateProjects: true,
         canManageMembers: true,
-        canDeleteWorkspace: true,
+        canDeleteWorkspace: false,
         canModifySettings: true,
       },
     });
@@ -93,7 +94,13 @@ export const register = catchAsync(
     const accessToken = generateAccessToken(newUser._id);
     const refreshToken = generateRefreshToken(newUser._id);
 
-    await Token.create({ token: refreshToken, userId: newUser._id });
+    await Token.create({
+      token: refreshToken,
+      userId: newUser._id,
+      userAgent: req.headers["user-agent"],
+      ipAddress: req.ip,
+      expiresAt: new Date(Date.now() + ms(config.REFRESH_TOKEN_EXPIRY)),
+    });
     logger.info("Refresh Token created for user", {
       userId: newUser._id,
       token: refreshToken,
@@ -106,8 +113,15 @@ export const register = catchAsync(
       path: "/",
     };
 
-    res.cookie("refreshToken", refreshToken, cookieOptions);
-    res.cookie("accessToken", accessToken, cookieOptions);
+    res.cookie("refreshToken", refreshToken, {
+      ...cookieOptions,
+      maxAge: ms(config.REFRESH_TOKEN_EXPIRY),
+    });
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: ms(config.ACCESS_TOKEN_EXPIRY),
+    });
 
     const { password: _, ...userWithoutPassword } = newUser.toObject();
 

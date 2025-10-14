@@ -13,7 +13,7 @@ const router = Router();
 router.get("/", protect, getTasks);
 router.get("/:taskId", protect, getTaskById);
 router.post("/", protect, createTask);
-router.put("/:taskId", protect, updateTask);
+router.patch("/:taskId", protect, updateTask);
 router.delete("/:taskId", protect, deleteTask);
 
 router.get("/:taskId/subtasks", protect, getSubTasks);

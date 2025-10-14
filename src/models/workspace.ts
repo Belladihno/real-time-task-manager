@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IWorkspace } from "@/utils/interface";
+import { IWorkspace } from "@/@types/interface";
 import { createSlug, generateUniqueSlug } from "@/helpers/generate.slug";
  
 

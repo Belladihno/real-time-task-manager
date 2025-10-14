@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { ISubTask } from "@/utils/interface";
+import { ISubTask } from "@/@types/interface";
 import { createSlug, generateUniqueSlug } from "@/helpers/generate.slug";
 
 const subTaskSchema = new Schema<ISubTask>(

@@ -1,6 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IProject } from "@/utils/interface";
-import { IWorkspace } from "@/utils/interface";
+import { IProject } from "@/@types/interface";
 import { createSlug, generateUniqueSlug } from "@/helpers/generate.slug";
 
 const projectSchema = new Schema<IProject>(

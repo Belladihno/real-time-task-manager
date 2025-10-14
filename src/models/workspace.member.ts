@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IWorkspaceMember } from "@/utils/interface";
+import { IWorkspaceMember } from "@/@types/interface";
 
 const workspaceMemberSchema = new Schema<IWorkspaceMember>(
   {

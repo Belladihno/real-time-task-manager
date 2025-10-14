@@ -3,7 +3,7 @@ import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import Task from "@/models/task";
 import { logger } from "@/lib/winston";
-import { ICreateTaskData } from "@/utils/interface";
+import { ICreateTaskData } from "@/@types/interface";
 import Project from "@/models/project";
 import ProjectMember from "@/models/project.member";
 import validator from "@/middlewares/validator";

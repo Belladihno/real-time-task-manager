@@ -6,9 +6,10 @@ import validator from "@/middlewares/validator";
 import { logger } from "@/lib/winston";
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt";
 import { doHashValidation } from "@/utils/hashing";
-import { IUser } from "@/utils/interface";
+import { IUser } from "@/@types/interface";
 import Token from "@/models/token";
 import config from "@/config/index.config";
+import ms from "ms";
 
 type UserData = Pick<IUser, "email" | "password">;
 
@@ -34,18 +35,28 @@ export const login = catchAsync(
     const accessToken = generateAccessToken(existingUser._id);
 
     let refreshToken: string;
+
     const existingToken = await Token.findOne({
       userId: existingUser._id,
     }).sort({ createdAt: -1 });
 
     if (existingToken) {
       refreshToken = existingToken.token;
+
       logger.info("Reusing existing refresh token for user", {
         userId: existingUser._id,
       });
     } else {
       refreshToken = generateRefreshToken(existingUser._id);
-      await Token.create({ token: refreshToken, userId: existingUser._id });
+
+      await Token.create({
+        token: refreshToken,
+        userId: existingUser._id,
+        userAgent: req.headers["user-agent"],
+        ipAddress: req.ip,
+        expiresAt: new Date(Date.now() + ms(config.REFRESH_TOKEN_EXPIRY)),
+      });
+
       logger.info("New refresh token created for user", {
         userId: existingUser._id,
         token: refreshToken,
@@ -53,6 +64,7 @@ export const login = catchAsync(
     }
 
     existingUser.isOnline = true;
+
     await existingUser.save();
 
     const cookieOptions: CookieOptions = {
@@ -62,8 +74,15 @@ export const login = catchAsync(
       path: "/",
     };
 
-    res.cookie("refreshToken", refreshToken, cookieOptions);
-    res.cookie("accessToken", accessToken, cookieOptions);
+    res.cookie("refreshToken", refreshToken, {
+      ...cookieOptions,
+      maxAge: ms(config.REFRESH_TOKEN_EXPIRY),
+    });
+
+    res.cookie("accessToken", accessToken, {
+      ...cookieOptions,
+      maxAge: ms(config.ACCESS_TOKEN_EXPIRY),
+    });
 
     const { password: _, ...userWithoutPassword } = existingUser.toObject();
 
@@ -74,6 +93,8 @@ export const login = catchAsync(
       accessToken,
     });
 
-    logger.info("User login successufully", userWithoutPassword);
+    logger.info("User login successufully", {
+      userId: existingUser._id,
+    });
   }
 );

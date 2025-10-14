@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { IPaginationResult, IPaginationOptions } from "@/utils/interface";
+import { IPaginationResult, IPaginationOptions } from "@/@types/interface";
 
 export const paginate = async (
   Model: Model<any>,

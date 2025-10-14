@@ -7,7 +7,7 @@ import { deleteSubTask } from "@/controllers/sub-tasks/delete.sub.task";
 const router = Router();
 
 router.get("/:subTaskId", protect, getSubTaskById);
-router.put("/:subTaskId", protect, updateSubTask);
+router.patch("/:subTaskId", protect, updateSubTask);
 router.delete("/:subTaskId", protect, deleteSubTask);
 
 export default router;

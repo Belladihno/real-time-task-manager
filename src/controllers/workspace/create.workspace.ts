@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import Workspace from "@/models/workspace";
 import WorkspaceMember from "@/models/workspace.member";
 import catchAsync from "@/utils/catchAsync";
-import { ICreateWorkspaceData } from "@/utils/interface";
+import { ICreateWorkspaceData } from "@/@types/interface";
 import validator from "@/middlewares/validator";
 import ApiError from "@/utils/apiError";
 import config from "@/config/index.config";

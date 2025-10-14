@@ -95,9 +95,14 @@ export interface IEmailError {
 }
 
 export interface IToken {
+  _id?: Types.ObjectId;
   token: string;
   userId: Types.ObjectId;
+  userAgent?: string;
+  ipAddress?: string;
+  expiresAt: Date;
 }
+
 export interface IJWTPayload {
   userId: string;
   iat?: number;
@@ -250,4 +255,23 @@ export interface ICreateCommentData {
   commentTypeId: Types.ObjectId;
   mentions?: Types.ObjectId;
   attachments?: [string];
+}
+
+
+export interface IAddMemberToProject {
+  userId: Types.ObjectId;
+  role?: "manager" | "member";
+}
+
+export interface IAddMemberToWorkspace {
+  userId: Types.ObjectId;
+  role?: "admin" | "member";
+}
+
+export interface IUpdateProjectMemberData {
+  role?: "manager" | "member";
+}
+
+export interface IUpdateWorkspaceMemberData {
+  role?: "admin" | "member";
 }

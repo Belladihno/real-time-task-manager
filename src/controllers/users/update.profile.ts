@@ -4,7 +4,7 @@ import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import validator from "@/middlewares/validator";
 import User from "@/models/user";
-import { IUpdataData } from "@/utils/interface";
+import { IUpdataData } from "@/@types/interface";
 
 export const updateProfile = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {

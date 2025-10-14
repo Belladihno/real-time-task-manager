@@ -5,7 +5,7 @@ import ApiError from "@/utils/apiError";
 import User from "@/models/user";
 import { verifyAccessToken } from "@/lib/jwt";
 import { Types } from "mongoose";
-import { IUser, IJWTPayload } from "@/utils/interface";
+import { IUser, IJWTPayload } from "@/@types/interface";
 import BlacklistToken from "@/models/blacklist.token";
 
 const extractToken = (req: Request): string | null => {

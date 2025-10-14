@@ -6,7 +6,7 @@ import Task from "@/models/task";
 import Project from "@/models/project";
 import ProjectMember from "@/models/project.member";
 import { logger } from "@/lib/winston";
-import { ICreateCommentData } from "@/utils/interface";
+import { ICreateCommentData } from "@/@types/interface";
 import validator from "@/middlewares/validator";
 
 export const createComment = catchAsync(

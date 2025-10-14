@@ -19,6 +19,18 @@ const idSchema = Joi.string().required().hex().length(24).messages({
   "string.length": "Invalid ID length",
 });
 
+const projectMemberRoleSchema = Joi.string()
+  .valid("manager", "member")
+  .messages({
+    "any.only": "Role must be either 'manager' or 'member'",
+  });
+
+const worspaceMemberRoleSchema = Joi.string()
+  .valid("admin", "member")
+  .messages({
+    "any.only": "Role must be either 'admin' or 'member'",
+  });
+
 const firstNameSchema = Joi.string().required().trim().min(3).messages({
   "string-min": "firstname must contain at least 3 characters",
 });
@@ -203,6 +215,23 @@ const updateCommentSchema = Joi.object({
   }),
 });
 
+const addProjectMemberSchema = Joi.object({
+  userId: idSchema,
+  role: projectMemberRoleSchema.default("member"),
+});
+
+const addworkspaceMemberSchema = Joi.object({
+  userId: idSchema,
+  role: worspaceMemberRoleSchema.default("member"),
+});
+
+const updateProjectMemberSchema = Joi.object({
+  role: projectMemberRoleSchema.optional(),
+});
+const updateWorkspaceMemberSchema = Joi.object({
+  role: worspaceMemberRoleSchema.optional(),
+});
+
 export default {
   registerSchema,
   loginSchema,
@@ -218,5 +247,9 @@ export default {
   createSubTaskSchema,
   updateSubTaskSchema,
   createCommentSchema,
-  updateCommentSchema
+  updateCommentSchema,
+  addProjectMemberSchema,
+  updateProjectMemberSchema,
+  addworkspaceMemberSchema,
+  updateWorkspaceMemberSchema
 };

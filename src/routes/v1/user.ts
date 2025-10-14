@@ -10,8 +10,8 @@ import { getUserById } from "@/controllers/users/get.user";
 const router = Router();
 
 router.get("/profile", protect, authorize(["admin", "user"]), getProfile);
-router.put("/profile", protect, authorize(["admin", "user"]), updateProfile);
-router.put("/password", protect, changePassword);
+router.patch("/profile", protect, authorize(["admin", "user"]), updateProfile);
+router.patch("/password", protect, changePassword);
 router.get("/", protect, authorize(["admin"]), getUsers);
 router.get("/:userId", protect, authorize(["admin"]), getUserById);
 

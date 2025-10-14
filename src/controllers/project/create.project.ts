@@ -6,7 +6,7 @@ import ProjectMember from "@/models/project.member";
 import Workspace from "@/models/workspace";
 import WorkspaceMember from "@/models/workspace.member";
 import { logger } from "@/lib/winston";
-import { ICreateProjectData } from "@/utils/interface";
+import { ICreateProjectData } from "@/@types/interface";
 import validator from "@/middlewares/validator";
 
 export const createProject = catchAsync(

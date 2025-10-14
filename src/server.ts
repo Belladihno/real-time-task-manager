@@ -11,9 +11,11 @@ import { logger } from "@/lib/winston";
 import errorHandler from "./middlewares/error.handler";
 import ApiError from "./utils/apiError";
 import config from "./config/index.config";
-
+import { createServer } from "http";
+import { wsManager } from "./lib/websocket.server";
 
 const app = express();
+const server = createServer(app)
 
 const PORT = config.PORT || 8000;
 
@@ -33,6 +35,8 @@ if (config.NODE_ENV !== "test") {
   try {
     await connectDB();
 
+    wsManager.initialize(server)
+
     app.use("/api/v1", v1Routes);
 
     app.use((req, res, next) => {
@@ -45,10 +49,10 @@ if (config.NODE_ENV !== "test") {
 
     app.use(errorHandler);
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       logger.info(`server is running on http://localhost:${PORT}`);
+      logger.info(`WebSocket server running on ws://localhost:${PORT}/ws`);
     });
-    
   } catch (error) {
     logger.error("Failed to start the server", error);
 
