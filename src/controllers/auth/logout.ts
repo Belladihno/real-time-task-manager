@@ -1,10 +1,10 @@
-import type { CookieOptions, NextFunction, Request, Response } from "express";
+import type {  NextFunction, Request, Response } from "express";
 import catchAsync from "@/utils/catchAsync";
 import { logger } from "@/lib/winston";
 import Token from "@/models/token";
-import config from "@/config/index.config";
 import { verifyAccessToken } from "@/lib/jwt";
 import BlacklistToken from "@/models/blacklist.token";
+import { clearAuthCookies } from "@/utils/cookie.helpers";
 
 export const logout = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -28,15 +28,7 @@ export const logout = catchAsync(
       logger.info("Access token blacklisted during logout");
     }
 
-    const cookieOptions: CookieOptions = {
-      httpOnly: true,
-      secure: config.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
-    };
-
-    res.clearCookie("refreshToken", cookieOptions);
-    res.clearCookie("accessToken", cookieOptions);
+    clearAuthCookies(res);
 
     res.sendStatus(204);
 

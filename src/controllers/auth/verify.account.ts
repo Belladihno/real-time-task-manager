@@ -4,6 +4,8 @@ import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import { hashToken } from "@/utils/hashing";
 import { logger } from "@/lib/winston";
+import { welcomeEmail } from "@/services/email.template";
+import emailService from "@/services/email.service";
 
 export const verifyAccount = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -27,15 +29,36 @@ export const verifyAccount = catchAsync(
     user.verificationToken = null;
     user.verificationTokenExpiresAt = null;
     user.isVerified = true;
-    user.status = 'active';
+    user.status = "active";
 
     await user.save();
 
-    logger.info("Account verified successfully for user:", { user: user._id });
+    try {
+      const emailContent = welcomeEmail(user.displayName);
 
-    res.status(200).json({
-      status: "success",
-      message: "Account verified successfully.",
-    });
+      await emailService.sendEmail({
+        to: user.email,
+        subject: "Welcome on board",
+        html: emailContent.html,
+        text: emailContent.text,
+      });
+
+      logger.info("Account verified successfully for user:", {
+        user: user._id,
+      });
+
+      res.status(200).json({
+        status: "success",
+        message: "Account verified successfully.",
+      });
+    } catch (emailError) {
+      logger.error("Email sending failed:", emailError);
+      return next(
+        new ApiError(
+          "Unable to send welcome email. Please try again later.",
+          503
+        )
+      );
+    }
   }
 );

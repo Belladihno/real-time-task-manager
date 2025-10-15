@@ -1,7 +1,7 @@
 import User from "@/models/user";
 import Workspace from "@/models/workspace";
 import WorkspaceMember from "@/models/workspace.member";
-import type { CookieOptions, NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import catchAsync from "@/utils/catchAsync";
 import ApiError from "@/utils/apiError";
 import validator from "@/middlewares/validator";
@@ -12,6 +12,7 @@ import { IUser } from "@/@types/interface";
 import Token from "@/models/token";
 import config from "@/config/index.config";
 import ms from "ms";
+import { setAuthCookies } from "@/utils/cookie.helpers";
 
 type UserData = Pick<
   IUser,
@@ -106,22 +107,7 @@ export const register = catchAsync(
       token: refreshToken,
     });
 
-    const cookieOptions: CookieOptions = {
-      httpOnly: true,
-      secure: config.NODE_ENV === "production",
-      sameSite: "strict",
-      path: "/",
-    };
-
-    res.cookie("refreshToken", refreshToken, {
-      ...cookieOptions,
-      maxAge: ms(config.REFRESH_TOKEN_EXPIRY),
-    });
-
-    res.cookie("accessToken", accessToken, {
-      ...cookieOptions,
-      maxAge: ms(config.ACCESS_TOKEN_EXPIRY),
-    });
+    setAuthCookies(res, accessToken, refreshToken);
 
     const { password: _, ...userWithoutPassword } = newUser.toObject();
 

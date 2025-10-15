@@ -5,6 +5,8 @@ import ApiError from "@/utils/apiError";
 import validator from "@/middlewares/validator";
 import { doHash, hashToken } from "@/utils/hashing";
 import { logger } from "@/lib/winston";
+import { passwordChangedEmail } from "@/services/email.template";
+import emailService from "@/services/email.service";
 
 export const resetPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -44,12 +46,31 @@ export const resetPassword = catchAsync(
 
     await user.save();
 
-    logger.info("Password reset successful for user:", user.email);
+    try {
+      const emailContent = passwordChangedEmail(user.displayName);
 
-    res.status(200).json({
-      status: "success",
-      message:
-        "Password has been reset successfully. You can now login with your new password.",
-    });
+      await emailService.sendEmail({
+        to: user.email,
+        subject: "Password Changed",
+        html: emailContent.html,
+        text: emailContent.text,
+      });
+
+      logger.info("Password reset successful for user:", user.email);
+
+      res.status(200).json({
+        status: "success",
+        message:
+          "Password has been reset successfully. You can now login with your new password.",
+      });
+    } catch (emailError) {
+      logger.error("Email sending failed:", emailError);
+      return next(
+        new ApiError(
+          "Unable to send welcome email. Please try again later.",
+          503
+        )
+      );
+    }
   }
 );

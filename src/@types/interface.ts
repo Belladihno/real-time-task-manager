@@ -275,3 +275,8 @@ export interface IUpdateProjectMemberData {
 export interface IUpdateWorkspaceMemberData {
   role?: "admin" | "member";
 }
+
+export interface IEmailTemplate {
+  html: string;
+  text: string;
+}
